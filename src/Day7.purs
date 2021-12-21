@@ -9,7 +9,7 @@ import Effect (Effect)
 import Effect.Console (logShow)
 import Math (abs)
 import Parsers (parseInt, parseFile)
-import Text.Parsing.Parser (Parser, runParser)
+import Text.Parsing.Parser (Parser)
 import Text.Parsing.Parser.Combinators (many1)
 import Text.Parsing.Parser.String (char, noneOf, eof)
 
