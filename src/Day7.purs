@@ -8,32 +8,30 @@ import Data.Int (ceil, floor, toNumber)
 import Effect (Effect)
 import Effect.Console (logShow)
 import Math (abs)
-import Node.Encoding (Encoding(..))
-import Node.FS.Sync (readTextFile)
-import Parsers (parseInt)
+import Parsers (parseInt, parseFile)
 import Text.Parsing.Parser (Parser, runParser)
 import Text.Parsing.Parser.Combinators (many1)
 import Text.Parsing.Parser.String (char, noneOf, eof)
 
 partOneSampleSolution :: Effect Unit
-partOneSampleSolution = do
-  f <- flip runParser inputParser <$> readTextFile UTF8 "src/Day7/sample_input.txt"
-  logShow $ partOne <$> f
+partOneSampleSolution =
+  parseFile "src/Day7/sample_input.txt" inputParser
+    >>= (map partOne >>> logShow)
 
 partOneSolution :: Effect Unit
-partOneSolution = do
-  f <- flip runParser inputParser <$> readTextFile UTF8 "src/Day7/input.txt"
-  logShow $ partOne <$> f
+partOneSolution =
+  parseFile "src/Day7/input.txt" inputParser
+    >>= (map partOne >>> logShow)
 
 partTwoSampleSolution :: Effect Unit
-partTwoSampleSolution = do
-  f <- flip runParser inputParser <$> readTextFile UTF8 "src/Day7/sample_input.txt"
-  logShow $ partTwo <$> f
+partTwoSampleSolution =
+  parseFile "src/Day7/sample_input.txt" inputParser
+    >>= (map partTwo >>> logShow)
 
 partTwoSolution :: Effect Unit
-partTwoSolution = do
-  f <- flip runParser inputParser <$> readTextFile UTF8 "src/Day7/input.txt"
-  logShow $ partTwo <$> f
+partTwoSolution =
+  parseFile "src/Day7/input.txt" inputParser
+    >>= (map partTwo >>> logShow)
 
 partOne :: Array Int -> Number
 partOne input =
