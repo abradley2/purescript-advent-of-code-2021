@@ -4,7 +4,7 @@ import Prelude
 import Control.Alternative ((<|>))
 import Data.Array (cons, length)
 import Data.Foldable (sum, foldr)
-import Data.Int (ceil, toNumber)
+import Data.Int (ceil, floor, toNumber)
 import Effect (Effect)
 import Effect.Console (logShow)
 import Math (abs)
@@ -30,7 +30,11 @@ partTwoSampleSolution = do
   f <- flip runParser inputParser <$> readTextFile UTF8 "src/Day7/sample_input.txt"
   logShow $ partTwo <$> f
 
--- 355627.0
+partTwoSolution :: Effect Unit
+partTwoSolution = do
+  f <- flip runParser inputParser <$> readTextFile UTF8 "src/Day7/input.txt"
+  logShow $ partTwo <$> f
+
 partOne :: Array Int -> Number
 partOne input =
   foldr
@@ -42,16 +46,30 @@ partOne input =
   where
   minDistance cur = sum $ toNumber >>> (\a -> abs (cur - a)) <$> input
 
-partTwo :: Array Int -> Number
+partTwo :: Array Int -> Int
 partTwo input =
   foldr
     ( \cur champ ->
         if minDistance cur < champ then minDistance cur else champ
     )
-    (minDistance $ geoMidpoint $ toNumber <$> input)
-    (toNumber <$> input)
+    geoMin
+    input
   where
-  minDistance cur = toNumber <<< actualDist <<< ceil <<< sum $ toNumber >>> (\a -> abs (cur - a)) <$> input
+  geoMin =
+    let
+      midpoint = geoMidpoint $ toNumber <$> input
+
+      floorMp = minDistance $ floor midpoint
+
+      ceilMp = minDistance $ ceil midpoint
+    in
+      if floorMp < ceilMp then floorMp else ceilMp
+
+  minDistance :: Int -> Int
+  minDistance cur = sum $ (\a -> actualDist <<< absInt $ (cur - a)) <$> input
+
+absInt :: Int -> Int
+absInt = toNumber >>> abs >>> ceil
 
 inputParser :: Parser String (Array Int)
 inputParser = do
